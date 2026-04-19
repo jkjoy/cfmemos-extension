@@ -1,0 +1,44 @@
+{
+  "manifest_version": 3,
+  "name": "Memos 快速发送",
+  "version": "0.1.0",
+  "description": "通过右键菜单快速发送选中文本、链接、页面和图片到你的 Memos 实例。",
+  "permissions": [
+    "contextMenus",
+    "storage",
+    "activeTab",
+    "scripting",
+    "notifications"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "src/background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "Memos 快速发送",
+    "default_popup": "src/popup/popup.html"
+  },
+  "options_ui": {
+    "page": "src/options/options.html",
+    "open_in_tab": true
+  },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+M",
+        "mac": "Command+Shift+M"
+      },
+      "description": "打开 Memos 快速发送弹窗"
+    },
+    "save-selection": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+S",
+        "mac": "Command+Shift+S"
+      },
+      "description": "将当前选中文本保存为 memo"
+    }
+  }
+}

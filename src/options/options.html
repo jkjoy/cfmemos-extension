@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Memos 设置</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Memos 快速发送</h1>
+
+      <section>
+        <label>
+          <span>后端 URL</span>
+          <input id="backendUrl" type="url" placeholder="https://memos-api.your-subdomain.workers.dev" />
+          <small>Memos Worker 的基础地址,末尾不要带斜杠。</small>
+        </label>
+
+        <label>
+          <span>访问令牌 (Access Token)</span>
+          <input id="accessToken" type="password" placeholder="粘贴你的访问令牌" autocomplete="off" />
+          <small>
+            在 Memos 网页端 <em>设置 → 我的账户 → Access Tokens</em> 中创建,
+            或使用下方的"快速登录"自动获取 JWT。
+          </small>
+        </label>
+
+        <label>
+          <span>默认可见性</span>
+          <select id="defaultVisibility">
+            <option value="PRIVATE">仅自己</option>
+            <option value="PROTECTED">登录可见</option>
+            <option value="PUBLIC">公开</option>
+          </select>
+        </label>
+
+        <label class="toggle">
+          <input id="includePageInfo" type="checkbox" />
+          <span>弹窗默认附加当前页面链接</span>
+        </label>
+
+        <div class="actions">
+          <button id="save" type="button">保存</button>
+          <button id="test" type="button" class="secondary">测试连接</button>
+          <span id="status" class="status"></span>
+        </div>
+      </section>
+
+      <section>
+        <h2>快速登录(可选)</h2>
+        <p class="hint">使用用户名密码调用 <code>/api/v1/auth/signin</code> 换取 JWT。</p>
+        <label>
+          <span>用户名</span>
+          <input id="username" type="text" autocomplete="username" />
+        </label>
+        <label>
+          <span>密码</span>
+          <input id="password" type="password" autocomplete="current-password" />
+        </label>
+        <div class="actions">
+          <button id="signin" type="button" class="secondary">登录并保存令牌</button>
+        </div>
+      </section>
+    </main>
+    <script type="module" src="options.js"></script>
+  </body>
+</html>
