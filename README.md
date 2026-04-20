@@ -19,12 +19,12 @@
 
 1. 克隆本仓库
    ```bash
-   git clone https://github.com/<you>/cfmemos-extension.git
+   git clone https://github.com/jkjoy/cfmemos-extension.git
    ```
 2. 打开 `chrome://extensions`,开启右上角 **开发者模式**
 3. 点击 **加载已解压的扩展程序**,选择本项目根目录(含 `manifest.json`)
 
-> 首次加载后,请把 `icons/icon128.png` 等图标放到 `icons/` 目录,否则通知可能没有图标。
+
 
 ## 配置
 
