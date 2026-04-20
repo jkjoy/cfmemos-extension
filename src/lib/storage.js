@@ -2,12 +2,31 @@ const DEFAULTS = {
   backendUrl: '',
   accessToken: '',
   defaultVisibility: 'PRIVATE',
-  includePageInfo: true,
+  popupIncludePageInfo: true,
+  quickSendIncludePageInfo: true,
 };
 
 export async function getSettings() {
-  const stored = await chrome.storage.local.get(DEFAULTS);
-  return { ...DEFAULTS, ...stored };
+  const stored = await chrome.storage.local.get({
+    ...DEFAULTS,
+    includePageInfo: undefined,
+  });
+
+  const legacyIncludePageInfo =
+    typeof stored.includePageInfo === 'boolean' ? stored.includePageInfo : undefined;
+
+  return {
+    ...DEFAULTS,
+    ...stored,
+    popupIncludePageInfo:
+      typeof stored.popupIncludePageInfo === 'boolean'
+        ? stored.popupIncludePageInfo
+        : legacyIncludePageInfo ?? DEFAULTS.popupIncludePageInfo,
+    quickSendIncludePageInfo:
+      typeof stored.quickSendIncludePageInfo === 'boolean'
+        ? stored.quickSendIncludePageInfo
+        : legacyIncludePageInfo ?? DEFAULTS.quickSendIncludePageInfo,
+  };
 }
 
 export async function setSettings(partial) {

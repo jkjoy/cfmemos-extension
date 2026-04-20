@@ -7,7 +7,8 @@ const fields = {
   backendUrl: $('backendUrl'),
   accessToken: $('accessToken'),
   defaultVisibility: $('defaultVisibility'),
-  includePageInfo: $('includePageInfo'),
+  popupIncludePageInfo: $('popupIncludePageInfo'),
+  quickSendIncludePageInfo: $('quickSendIncludePageInfo'),
 };
 
 const $status = $('status');
@@ -19,7 +20,8 @@ async function init() {
   fields.backendUrl.value = settings.backendUrl;
   fields.accessToken.value = settings.accessToken;
   fields.defaultVisibility.value = settings.defaultVisibility;
-  fields.includePageInfo.checked = settings.includePageInfo;
+  fields.popupIncludePageInfo.checked = settings.popupIncludePageInfo;
+  fields.quickSendIncludePageInfo.checked = settings.quickSendIncludePageInfo;
 
   $('save').addEventListener('click', save);
   $('test').addEventListener('click', test);
@@ -31,7 +33,8 @@ async function save() {
     backendUrl: normalizeBackendUrl(fields.backendUrl.value),
     accessToken: normalizeToken(fields.accessToken.value),
     defaultVisibility: fields.defaultVisibility.value,
-    includePageInfo: fields.includePageInfo.checked,
+    popupIncludePageInfo: fields.popupIncludePageInfo.checked,
+    quickSendIncludePageInfo: fields.quickSendIncludePageInfo.checked,
   });
   setStatus('已保存。', 'ok');
 }

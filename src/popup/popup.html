@@ -7,27 +7,94 @@
     <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
-    <main>
-      <textarea id="content" rows="6" placeholder="记点什么?用 #标签 打标签。"></textarea>
+    <main class="window">
+      <header class="titlebar">
+        <div class="title-copy">
+          <h1>Memos</h1>
+        </div>
+        <span id="shortcutHint" class="shortcut-hint">Ctrl+Enter</span>
+      </header>
 
-      <div class="row">
-        <label class="toggle">
-          <input type="checkbox" id="includePage" />
-          <span>附加当前页面链接</span>
-        </label>
-        <select id="visibility">
-          <option value="PRIVATE">仅自己</option>
-          <option value="PROTECTED">登录可见</option>
-          <option value="PUBLIC">公开</option>
-        </select>
-      </div>
+      <section class="editor-card">
+        <div class="editor-toolbar">
+          <div class="markdown-tools" id="markdownTools" aria-label="Markdown 工具栏">
+            <button class="tool-button" type="button" data-md-action="bold" title="粗体" aria-label="粗体">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6 4.5h4.6c2.1 0 3.4 1.1 3.4 2.8 0 1.2-.7 2.1-1.8 2.5 1.5.3 2.4 1.4 2.4 3 0 2-1.5 3.2-4 3.2H6V4.5Zm2 1.7v3.1h2.1c1.3 0 2-.5 2-1.5s-.7-1.6-2-1.6H8Zm0 4.7v3.4h2.5c1.5 0 2.2-.6 2.2-1.7s-.8-1.7-2.3-1.7H8Z"/></svg>
+            </button>
+            <button class="tool-button" type="button" data-md-action="italic" title="斜体" aria-label="斜体">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8.5 4h7v1.8h-2.5l-3 8.4H12V16H5v-1.8h2.5l3-8.4H8.5V4Z"/></svg>
+            </button>
+            <button class="tool-button" type="button" data-md-action="heading" title="标题" aria-label="标题">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 4h2v5h8V4h2v12h-2v-5H6v5H4V4Zm12 4.5h1.4V15H16V10l-1 .6-.6-1.1 1.6-1Z"/></svg>
+            </button>
+            <button class="tool-button" type="button" data-md-action="quote" title="引用" aria-label="引用">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5.4 6C4 6 3 7 3 8.5V14h5V9H5.5c.1-.8.7-1.4 1.6-1.5L8 7.4V6H5.4Zm7 0C11 6 10 7 10 8.5V14h5V9h-2.5c.1-.8.7-1.4 1.6-1.5l.9-.1V6h-2.6Z"/></svg>
+            </button>
+            <button class="tool-button" type="button" data-md-action="ul" title="列表" aria-label="列表">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 5.5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5Zm3 0h9V8H7V5.5Zm-3 5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5Zm3 0h9V13H7v-2.5Zm-3 5A1.25 1.25 0 1 1 4 18a1.25 1.25 0 0 1 0-2.5Zm3 0h9V18H7v-2.5Z"/></svg>
+            </button>
+            <button class="tool-button" type="button" data-md-action="ol" title="编号" aria-label="编号">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3.5 5h1.2v4H3.5V6.4l-.7.4-.5-1 1.2-.8Zm3.5.5H17V8H7V5.5Zm-4.5 6c0-.9.7-1.5 1.8-1.5 1.1 0 1.8.6 1.8 1.4 0 .6-.3 1-.9 1.5l-.9.7h1.9V15H2.3v-1.1l1.8-1.5c.5-.4.6-.6.6-.9 0-.3-.2-.5-.6-.5s-.7.2-.7.6H2.5Zm4.5-.5H17v2.5H7V11Zm0 5H17V18H7v-2Z"/></svg>
+            </button>
+            <button class="tool-button" type="button" data-md-action="link" title="链接" aria-label="链接">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8.8 12.6 7.4 14a3 3 0 1 1-4.2-4.2l2.4-2.4A3 3 0 0 1 10.7 9l-1.4 1.4a1.4 1.4 0 0 0-2.6-1L4.3 11.8a1.4 1.4 0 1 0 2 2l1.3-1.3 1.2 1.1Zm2.4-5.2L12.6 6a3 3 0 1 1 4.2 4.2l-2.4 2.4A3 3 0 0 1 9.3 11l1.4-1.4a1.4 1.4 0 0 0 2.6 1l2.4-2.4a1.4 1.4 0 0 0-2-2l-1.3 1.3-1.2-1.1Z"/></svg>
+            </button>
+            <button class="tool-button" type="button" data-md-action="code" title="代码" aria-label="代码">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7.3 6.2 3.8 10l3.5 3.8-1.2 1.1L1.6 10l4.5-4.9 1.2 1.1Zm5.4 0 1.2-1.1 4.5 4.9-4.5 4.9-1.2-1.1 3.5-3.8-3.5-3.8Zm-1.8-2 1.6.4-3.4 11.2-1.6-.4L10.9 4.2Z"/></svg>
+            </button>
+            <button class="tool-button" type="button" data-md-action="codeblock" title="代码块" aria-label="代码块">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2 5.5A1.5 1.5 0 0 1 3.5 4h13A1.5 1.5 0 0 1 18 5.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 2 14.5v-9Zm1.5 0v2h13v-2h-13Zm2.8 4.9L4.9 12l1.4 1.3-1 1L3.7 12.8v-1.6l1.6-1.5 1 1Zm3.1-1.4h1.2v4H9.4v-4Zm5.3 1.4 1-1 1.6 1.5v1.6l-1.6 1.5-1-1 1.4-1.3-1.4-1.3Z"/></svg>
+            </button>
+            <button id="pickFiles" class="tool-button upload-tool-button" type="button" title="上传附件" aria-label="上传附件">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10.8 3.7a3.5 3.5 0 0 1 5 5l-5.9 5.9a4.5 4.5 0 1 1-6.4-6.4L9 2.7a2.5 2.5 0 0 1 3.6 3.5l-5.4 5.4a1.5 1.5 0 0 1-2.2-2.1l4.8-4.8 1 1-4.8 4.8a.1.1 0 0 0 .1.2l5.4-5.4a1.1 1.1 0 0 0-1.5-1.5L4.5 9.2a3.1 3.1 0 1 0 4.4 4.4l5.9-5.9a2.1 2.1 0 1 0-3-3l-5 5-1-1 5-5Z"/></svg>
+            </button>
+          </div>
+          <input id="fileInput" type="file" multiple hidden />
+        </div>
 
-      <div class="row actions">
-        <span id="status" class="status"></span>
-        <button id="submit" type="button">发送</button>
-      </div>
+        <div class="editor-surface">
+          <label class="sr-only" for="content">Memo 内容</label>
+          <textarea id="content" rows="7" placeholder="记点什么？可以直接写正文，也可以用 #标签 归档灵感。"></textarea>
+        </div>
+        <div class="editor-meta">
+         
+          <label class="select-row" for="visibility">
+            
+            <span class="select-wrap">
+              <select id="visibility">
+                <option value="PRIVATE">仅自己可见</option>
+                <option value="PROTECTED">登录可见</option>
+                <option value="PUBLIC">公开</option>
+              </select>
+              <span class="select-chevron" aria-hidden="true"></span>
+            </span>
+          </label>
+          <span id="charCount" class="char-count">0 字</span>
+        </div>
+      </section>
 
-      <a id="openOptions" href="#">设置</a>
+      <section class="controls-card">
+        <div class="control-row">
+          <label class="switch-row" for="includePage">
+            <span class="switch">
+              <input type="checkbox" id="includePage" />
+              <span class="switch-ui" aria-hidden="true"></span>
+              <span class="switch-desc"> &nbsp;&nbsp; 添加当前页面标题和链接</span>
+            </span>
+          </label>
+        </div>
+        <div id="attachmentRow" class="attachment-row" hidden>
+          <div id="attachmentList" class="attachment-list"></div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <span id="status" class="status" aria-live="polite"></span>
+        <div class="footer-actions">
+          <a id="openOptions" href="#">设置</a>
+          <button id="submit" class="primary-button" type="button">发送 Memo</button>
+        </div>
+      </footer>
     </main>
     <script type="module" src="popup.js"></script>
   </body>

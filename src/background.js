@@ -9,34 +9,40 @@ const MENUS = {
 };
 
 chrome.runtime.onInstalled.addListener(() => {
-  chrome.contextMenus.create({
-    id: MENUS.SELECTION,
-    title: '保存选中文本到 Memos',
-    contexts: ['selection'],
-  });
-  chrome.contextMenus.create({
-    id: MENUS.PAGE,
-    title: '保存当前页面到 Memos',
-    contexts: ['page'],
-  });
-  chrome.contextMenus.create({
-    id: MENUS.LINK,
-    title: '保存链接到 Memos',
-    contexts: ['link'],
-  });
-  chrome.contextMenus.create({
-    id: MENUS.IMAGE,
-    title: '保存图片到 Memos',
-    contexts: ['image'],
-  });
+  createContextMenus();
 });
+
+function createContextMenus() {
+  chrome.contextMenus.removeAll(() => {
+    chrome.contextMenus.create({
+      id: MENUS.SELECTION,
+      title: '保存选中文本到 Memos',
+      contexts: ['selection'],
+    });
+    chrome.contextMenus.create({
+      id: MENUS.PAGE,
+      title: '保存当前页面到 Memos',
+      contexts: ['page'],
+    });
+    chrome.contextMenus.create({
+      id: MENUS.LINK,
+      title: '保存链接到 Memos',
+      contexts: ['link'],
+    });
+    chrome.contextMenus.create({
+      id: MENUS.IMAGE,
+      title: '保存图片到 Memos',
+      contexts: ['image'],
+    });
+  });
+}
 
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   try {
-    const { defaultVisibility } = await getSettings();
+    const { defaultVisibility, quickSendIncludePageInfo } = await getSettings();
     switch (info.menuItemId) {
       case MENUS.SELECTION:
-        await sendSelection(info, tab, defaultVisibility);
+        await sendSelection(info, tab, defaultVisibility, quickSendIncludePageInfo);
         break;
       case MENUS.PAGE:
         await sendPage(tab, defaultVisibility);
@@ -45,7 +51,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
         await sendLink(info, tab, defaultVisibility);
         break;
       case MENUS.IMAGE:
-        await sendImage(info, tab, defaultVisibility);
+        await sendImage(info, tab, defaultVisibility, quickSendIncludePageInfo);
         break;
     }
   } catch (err) {
@@ -66,22 +72,29 @@ chrome.commands.onCommand.addListener(async (command) => {
       notify('未选中内容', '请先选中一些文本');
       return;
     }
-    const { defaultVisibility } = await getSettings();
-    await sendSelection({ selectionText: selection, pageUrl: tab.url }, tab, defaultVisibility);
+    const { defaultVisibility, quickSendIncludePageInfo } = await getSettings();
+    await sendSelection(
+      { selectionText: selection, pageUrl: tab.url },
+      tab,
+      defaultVisibility,
+      quickSendIncludePageInfo
+    );
   } catch (err) {
     notifyError(err);
   }
 });
 
-async function sendSelection(info, tab, visibility) {
+async function sendSelection(info, tab, visibility, includePageInfo = true) {
   const quote = info.selectionText.trim();
   const title = tab?.title || '';
   const url = info.pageUrl || tab?.url || '';
-  const content = [
-    `> ${quote.split('\n').join('\n> ')}`,
-    '',
-    `—— [${title || url}](${url})`,
-  ].join('\n');
+  const content = includePageInfo && url
+    ? [
+        `> ${quote.split('\n').join('\n> ')}`,
+        '',
+        `—— [${title || url}](${url})`,
+      ].join('\n')
+    : `> ${quote.split('\n').join('\n> ')}`;
   await createMemo({ content, visibility });
   notify('已保存', truncate(quote, 80));
 }
@@ -102,13 +115,13 @@ async function sendLink(info, tab, visibility) {
   notify('链接已保存', linkUrl);
 }
 
-async function sendImage(info, tab, visibility) {
+async function sendImage(info, tab, visibility, includePageInfo = true) {
   const srcUrl = info.srcUrl;
   if (!srcUrl) throw new Error('未找到图片地址');
   const resource = await uploadResourceFromUrl(srcUrl);
   const pageTitle = tab?.title || '';
   const pageUrl = tab?.url || '';
-  const content = pageUrl ? `来自 [${pageTitle || pageUrl}](${pageUrl})` : '';
+  const content = includePageInfo && pageUrl ? `来自 [${pageTitle || pageUrl}](${pageUrl})` : '';
   await createMemo({
     content,
     visibility,
