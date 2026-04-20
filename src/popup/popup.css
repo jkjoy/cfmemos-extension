@@ -17,6 +17,23 @@
   --accent-soft: rgba(11, 87, 208, 0.12);
   --success: #137333;
   --error: #b3261e;
+  --toolbar-button-bg: #e9eef8;
+  --toolbar-button-bg-hover: #dde6f6;
+  --toolbar-button-text: #6d7da8;
+  --toolbar-button-text-hover: #55668f;
+  --toolbar-button-focus: rgba(125, 149, 202, 0.18);
+  --editor-surface-bg: #e9edf6;
+  --editor-text: #5f6d98;
+  --editor-focus-bg: rgba(255, 255, 255, 0.08);
+  --button-bg: #e9eef8;
+  --button-bg-hover: #dde6f6;
+  --button-text: #6d7da8;
+  --button-text-hover: #55668f;
+  --button-focus: rgba(125, 149, 202, 0.18);
+  --switch-thumb: #fff;
+  --switch-track: rgba(127, 135, 147, 0.35);
+  --switch-track-border: rgba(0, 0, 0, 0.06);
+  --switch-thumb-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
   --shadow-sm: 0 1px 2px rgba(60, 64, 67, 0.1), 0 1px 3px rgba(60, 64, 67, 0.08);
 }
 
@@ -37,6 +54,23 @@
     --accent-soft: rgba(138, 180, 248, 0.18);
     --success: #81c995;
     --error: #f28b82;
+    --toolbar-button-bg: #313843;
+    --toolbar-button-bg-hover: #3a4350;
+    --toolbar-button-text: #c0cbdf;
+    --toolbar-button-text-hover: #eef2f8;
+    --toolbar-button-focus: rgba(138, 180, 248, 0.22);
+    --editor-surface-bg: #2b3138;
+    --editor-text: #dce4f4;
+    --editor-focus-bg: rgba(138, 180, 248, 0.08);
+    --button-bg: #313843;
+    --button-bg-hover: #3a4350;
+    --button-text: #c0cbdf;
+    --button-text-hover: #eef2f8;
+    --button-focus: rgba(138, 180, 248, 0.22);
+    --switch-thumb: #f1f3f4;
+    --switch-track: rgba(255, 255, 255, 0.18);
+    --switch-track-border: rgba(255, 255, 255, 0.08);
+    --switch-thumb-shadow: 0 2px 6px rgba(0, 0, 0, 0.32);
     --shadow-sm: none;
   }
 }
@@ -131,8 +165,8 @@ body {
   padding: 0;
   border: 0;
   border-radius: 7px;
-  background: #e9eef8;
-  color: #6d7da8;
+  background: var(--toolbar-button-bg);
+  color: var(--toolbar-button-text);
   font: inherit;
   font-size: 12px;
   font-weight: 600;
@@ -149,14 +183,14 @@ body {
 }
 
 .tool-button:hover {
-  background: #dde6f6;
-  color: #55668f;
+  background: var(--toolbar-button-bg-hover);
+  color: var(--toolbar-button-text-hover);
   transform: translateY(-1px);
 }
 
 .tool-button:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 4px rgba(125, 149, 202, 0.18);
+  box-shadow: 0 0 0 4px var(--toolbar-button-focus);
 }
 
 .tool-button:disabled {
@@ -178,7 +212,7 @@ body {
   min-height: 0;
   border: 1px solid var(--border);
   border-radius: 8px;
-  background: #e9edf6;
+  background: var(--editor-surface-bg);
   box-shadow: none;
 }
 
@@ -195,7 +229,8 @@ textarea {
   font: inherit;
   font-size: 16px;
   line-height: 1.75;
-  color: #5f6d98;
+  color: var(--editor-text);
+  caret-color: var(--accent);
   background: transparent;
   box-shadow: none;
   transition: background 160ms ease;
@@ -207,7 +242,7 @@ textarea::placeholder {
 
 textarea:focus {
   outline: none;
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--editor-focus-bg);
 }
 
 .editor-meta {
@@ -292,8 +327,8 @@ textarea:focus {
   width: 38px;
   height: 22px;
   border-radius: 999px;
-  background: rgba(127, 135, 147, 0.35);
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+  background: var(--switch-track);
+  box-shadow: inset 0 0 0 1px var(--switch-track-border);
   transition: background 160ms ease, box-shadow 160ms ease;
 }
 
@@ -305,8 +340,8 @@ textarea:focus {
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
+  background: var(--switch-thumb);
+  box-shadow: var(--switch-thumb-shadow);
   transition: transform 180ms ease;
 }
 
@@ -489,8 +524,8 @@ select:focus {
   padding: 0 18px;
   border: 0;
   border-radius: 8px;
-  background: #e9eef8;
-  color: #6d7da8;
+  background: var(--button-bg);
+  color: var(--button-text);
   font: inherit;
   font-weight: 600;
   cursor: pointer;
@@ -499,13 +534,13 @@ select:focus {
 }
 
 .primary-button:hover:not(:disabled) {
-  background: #dde6f6;
-  color: #55668f;
+  background: var(--button-bg-hover);
+  color: var(--button-text-hover);
 }
 
 .primary-button:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 4px rgba(125, 149, 202, 0.18);
+  box-shadow: 0 0 0 4px var(--button-focus);
 }
 
 .primary-button:disabled {
