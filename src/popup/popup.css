@@ -389,9 +389,25 @@ textarea:focus {
   box-shadow: var(--shadow-sm);
 }
 
+.attachment-chip-image {
+  align-items: stretch;
+  gap: 10px;
+  padding: 6px;
+}
+
+.attachment-preview {
+  width: 56px;
+  height: 56px;
+  flex: 0 0 56px;
+  border-radius: 9px;
+  object-fit: cover;
+  background: var(--subtle-bg);
+}
+
 .attachment-chip-copy {
   display: flex;
   min-width: 0;
+  justify-content: center;
   flex-direction: column;
   gap: 2px;
 }
@@ -408,6 +424,10 @@ textarea:focus {
   max-width: 220px;
   font-size: 12px;
   font-weight: 600;
+}
+
+.attachment-chip-image .attachment-chip-name {
+  max-width: 172px;
 }
 
 .attachment-chip-meta {

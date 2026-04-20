@@ -75,6 +75,7 @@ async function init() {
   });
   $fileInput.addEventListener('change', handleFileSelection);
   $attachmentList.addEventListener('click', handleAttachmentRemoval);
+  window.addEventListener('beforeunload', cleanupAttachmentPreviews);
 
   renderAttachments();
 }
@@ -243,7 +244,11 @@ function handleFileSelection(event) {
     const key = getFileKey(file);
     if (existing.has(key)) continue;
     existing.add(key);
-    attachments.push({ id: createLocalId(), file });
+    attachments.push({
+      id: createLocalId(),
+      file,
+      previewUrl: isPreviewableImage(file) ? URL.createObjectURL(file) : '',
+    });
   }
 
   $fileInput.value = '';
@@ -254,7 +259,13 @@ function handleAttachmentRemoval(event) {
   const button = event.target.closest('[data-remove-attachment]');
   if (!button) return;
 
-  attachments = attachments.filter((item) => item.id !== button.dataset.removeAttachment);
+  const removedId = button.dataset.removeAttachment;
+  const removed = attachments.find((item) => item.id === removedId);
+  if (removed?.previewUrl) {
+    URL.revokeObjectURL(removed.previewUrl);
+  }
+
+  attachments = attachments.filter((item) => item.id !== removedId);
   renderAttachments();
 }
 
@@ -268,8 +279,13 @@ function renderAttachments() {
   $attachmentRow.hidden = false;
   $attachmentList.innerHTML = attachments
     .map(
-      ({ id, file }) => `
-        <span class="attachment-chip">
+      ({ id, file, previewUrl }) => `
+        <span class="attachment-chip ${previewUrl ? 'attachment-chip-image' : ''}">
+          ${
+            previewUrl
+              ? `<img class="attachment-preview" src="${escapeHtml(previewUrl)}" alt="${escapeHtml(file.name)}" />`
+              : ''
+          }
           <span class="attachment-chip-copy">
             <span class="attachment-chip-name">${escapeHtml(file.name)}</span>
             <span class="attachment-chip-meta">${formatFileSize(file.size)}</span>
@@ -305,6 +321,14 @@ function setBusyState(busy) {
   $fileInput.disabled = busy;
 }
 
+function cleanupAttachmentPreviews() {
+  attachments.forEach(({ previewUrl }) => {
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
+  });
+}
+
 function getFileKey(file) {
   return `${file.name}:${file.size}:${file.lastModified}`;
 }
@@ -321,4 +345,8 @@ function formatFileSize(bytes) {
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(bytes >= 1024 * 10 ? 0 : 1)} KB`;
   return `${(bytes / (1024 * 1024)).toFixed(bytes >= 1024 * 1024 * 10 ? 0 : 1)} MB`;
+}
+
+function isPreviewableImage(file) {
+  return typeof file.type === 'string' && file.type.startsWith('image/');
 }
