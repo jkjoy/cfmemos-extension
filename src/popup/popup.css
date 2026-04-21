@@ -23,8 +23,9 @@
   --toolbar-button-text-hover: #55668f;
   --toolbar-button-focus: rgba(125, 149, 202, 0.18);
   --editor-surface-bg: #e9edf6;
+  --editor-input-bg: #f7f9fc;
   --editor-text: #5f6d98;
-  --editor-focus-bg: rgba(255, 255, 255, 0.08);
+  --editor-focus-bg: #ffffff;
   --button-bg: #e9eef8;
   --button-bg-hover: #dde6f6;
   --button-text: #6d7da8;
@@ -60,8 +61,9 @@
     --toolbar-button-text-hover: #eef2f8;
     --toolbar-button-focus: rgba(138, 180, 248, 0.22);
     --editor-surface-bg: #2b3138;
+    --editor-input-bg: #242a31;
     --editor-text: #dce4f4;
-    --editor-focus-bg: rgba(138, 180, 248, 0.08);
+    --editor-focus-bg: #2b333d;
     --button-bg: #313843;
     --button-bg-hover: #3a4350;
     --button-text: #c0cbdf;
@@ -212,7 +214,7 @@ body {
   min-height: 0;
   border: 1px solid var(--border);
   border-radius: 8px;
-  background: var(--editor-surface-bg);
+  background: var(--editor-input-bg);
   box-shadow: none;
 }
 
@@ -231,9 +233,9 @@ textarea {
   line-height: 1.75;
   color: var(--editor-text);
   caret-color: var(--accent);
-  background: transparent;
+  background: var(--editor-input-bg);
   box-shadow: none;
-  transition: background 160ms ease;
+  transition: background 160ms ease, box-shadow 160ms ease;
 }
 
 textarea::placeholder {
@@ -243,6 +245,14 @@ textarea::placeholder {
 textarea:focus {
   outline: none;
   background: var(--editor-focus-bg);
+  box-shadow: inset 0 0 0 1px var(--accent-soft);
+}
+
+@media (prefers-color-scheme: dark) {
+  textarea,
+  select {
+    color-scheme: dark;
+  }
 }
 
 .editor-meta {

@@ -1,4 +1,5 @@
 import { createMemo, uploadResourceFromUrl, ApiError } from './lib/api.js';
+import { buildMarkdownLink } from './lib/markdown.js';
 import { getSettings } from './lib/storage.js';
 
 const MENUS = {
@@ -92,7 +93,7 @@ async function sendSelection(info, tab, visibility, includePageInfo = true) {
     ? [
         `> ${quote.split('\n').join('\n> ')}`,
         '',
-        `—— [${title || url}](${url})`,
+        `—— ${buildMarkdownLink(title || url, url)}`,
       ].join('\n')
     : `> ${quote.split('\n').join('\n> ')}`;
   await createMemo({ content, visibility });
@@ -102,7 +103,7 @@ async function sendSelection(info, tab, visibility, includePageInfo = true) {
 async function sendPage(tab, visibility) {
   const title = tab?.title || tab?.url || '';
   const url = tab?.url || '';
-  const content = `[${title}](${url})`;
+  const content = buildMarkdownLink(title, url);
   await createMemo({ content, visibility });
   notify('页面已保存', title);
 }
@@ -110,7 +111,7 @@ async function sendPage(tab, visibility) {
 async function sendLink(info, tab, visibility) {
   const linkUrl = info.linkUrl;
   const linkText = info.selectionText?.trim() || linkUrl;
-  const content = `[${linkText}](${linkUrl})`;
+  const content = buildMarkdownLink(linkText, linkUrl);
   await createMemo({ content, visibility });
   notify('链接已保存', linkUrl);
 }
@@ -121,7 +122,9 @@ async function sendImage(info, tab, visibility, includePageInfo = true) {
   const resource = await uploadResourceFromUrl(srcUrl);
   const pageTitle = tab?.title || '';
   const pageUrl = tab?.url || '';
-  const content = includePageInfo && pageUrl ? `来自 [${pageTitle || pageUrl}](${pageUrl})` : '';
+  const content = includePageInfo && pageUrl
+    ? `来自 ${buildMarkdownLink(pageTitle || pageUrl, pageUrl)}`
+    : '';
   await createMemo({
     content,
     visibility,

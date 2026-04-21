@@ -1,4 +1,5 @@
 import { createMemo, uploadResource, ApiError } from '../lib/api.js';
+import { buildMarkdownLink } from '../lib/markdown.js';
 import { getSettings } from '../lib/storage.js';
 
 const $content = document.getElementById('content');
@@ -219,7 +220,7 @@ function buildMemoContent({ trim } = { trim: true }) {
   let content = trim ? $content.value.trim() : $content.value.replace(/\s+$/, '');
 
   if ($includePage.checked && currentTab?.url) {
-    const link = `[${currentTab.title || currentTab.url}](${currentTab.url})`;
+    const link = buildMarkdownLink(currentTab.title || currentTab.url, currentTab.url);
     content = content.trim() ? `${content}\n\n---\n${link}` : link;
   }
 

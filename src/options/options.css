@@ -1,13 +1,53 @@
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --bg: #f5f6f8;
+  --text: #22262d;
+  --text-soft: #667085;
+  --card-bg: #ffffff;
+  --card-border: #dfe3ea;
+  --field-bg: #ffffff;
+  --field-border: #cfd5df;
+  --field-border-strong: #b6c0cf;
+  --field-placeholder: #8b93a1;
+  --accent: #4f8cff;
+  --accent-soft: rgba(79, 140, 255, 0.18);
+  --button-secondary-bg: transparent;
+  --button-secondary-text: #4f8cff;
+  --button-secondary-border: #4f8cff;
+  --success: #2a9d3a;
+  --error: #d14;
+  --shadow-sm: 0 10px 30px rgba(15, 23, 42, 0.05);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --bg: #171a1f;
+    --text: #e6ebf4;
+    --text-soft: #a7b0c0;
+    --card-bg: #20252c;
+    --card-border: #313845;
+    --field-bg: #262d36;
+    --field-border: #3a4352;
+    --field-border-strong: #4a5567;
+    --field-placeholder: #7f899b;
+    --accent: #8ab4f8;
+    --accent-soft: rgba(138, 180, 248, 0.2);
+    --button-secondary-bg: #252d38;
+    --button-secondary-text: #d9e7ff;
+    --button-secondary-border: #3d4960;
+    --success: #81c995;
+    --error: #f28b82;
+    --shadow-sm: none;
+  }
 }
 
 body {
   margin: 0;
   padding: 24px;
-  background: #fafafa;
-  color: #222;
+  background: var(--bg);
+  color: var(--text);
 }
 
 main {
@@ -22,13 +62,14 @@ h1 { margin: 0 0 4px; font-size: 22px; }
 h2 { margin: 0 0 8px; font-size: 16px; }
 
 section {
-  background: white;
-  border: 1px solid #e5e5e5;
-  border-radius: 8px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
   padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 12px;
+  box-shadow: var(--shadow-sm);
 }
 
 label {
@@ -44,27 +85,54 @@ input[type="text"],
 input[type="url"],
 input[type="password"],
 select {
-  padding: 8px 10px;
-  border: 1px solid #d0d0d0;
-  border-radius: 6px;
+  padding: 10px 12px;
+  border: 1px solid var(--field-border);
+  border-radius: 8px;
   font: inherit;
-  background: white;
-  color: inherit;
+  background: var(--field-bg);
+  color: var(--text);
+  transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+input::placeholder {
+  color: var(--field-placeholder);
+}
+
+select {
+  color-scheme: inherit;
+}
+
+input:hover,
+select:hover {
+  border-color: var(--field-border-strong);
 }
 
 input:focus,
 select:focus {
-  outline: 2px solid #4f8cff;
-  border-color: transparent;
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft);
 }
 
-small { color: #888; font-weight: normal; }
-.hint { color: #666; font-size: 13px; margin: 0; }
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--text);
+  box-shadow: 0 0 0 1000px var(--field-bg) inset;
+  transition: background-color 9999s ease-out 0s;
+}
+
+small { color: var(--text-soft); font-weight: normal; }
+.hint { color: var(--text-soft); font-size: 13px; margin: 0; }
 
 .toggle {
   flex-direction: row;
   align-items: center;
   gap: 8px;
+}
+
+.toggle input {
+  accent-color: var(--accent);
 }
 
 .actions {
@@ -78,28 +146,32 @@ small { color: #888; font-weight: normal; }
 button {
   padding: 8px 16px;
   border: none;
-  border-radius: 6px;
-  background: #4f8cff;
+  border-radius: 8px;
+  background: var(--accent);
   color: white;
   cursor: pointer;
   font-weight: 600;
+  transition: filter 160ms ease, transform 160ms ease, box-shadow 160ms ease;
 }
 
 button.secondary {
-  background: transparent;
-  color: #4f8cff;
-  border: 1px solid #4f8cff;
+  background: var(--button-secondary-bg);
+  color: var(--button-secondary-text);
+  border: 1px solid var(--button-secondary-border);
+}
+
+button:hover {
+  filter: brightness(1.03);
+  transform: translateY(-1px);
+}
+
+button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px var(--accent-soft);
 }
 
 button:disabled { opacity: 0.6; cursor: not-allowed; }
 
-.status { font-size: 13px; color: #888; }
-.status.ok { color: #2a9d3a; }
-.status.error { color: #d14; }
-
-@media (prefers-color-scheme: dark) {
-  body { background: #121212; color: #e0e0e0; }
-  section { background: #1e1e1e; border-color: #333; }
-  input, select { background: #2a2a2a; border-color: #444; color: inherit; }
-  small { color: #aaa; }
-}
+.status { font-size: 13px; color: var(--text-soft); }
+.status.ok { color: var(--success); }
+.status.error { color: var(--error); }
